@@ -1,38 +1,34 @@
-const calcular = document.getElementById('calcular')
+document.addEventListener("DOMContentLoaded", () => {
+  const calcular = document.getElementById("calcular");
+  calcular.addEventListener("click", calcularIMC);
+});
 
-function imc () {
-  const nome = document.getElementById('nome').value;
-  const altura = +document.getElementById('altura').value;
-  const peso = +document.getElementById('peso').value;
-  const resultado = document.getElementById('resultado');
+function calcularIMC() {
+  const nome = document.getElementById("nome").value.trim();
+  const altura = parseFloat(document.getElementById("altura").value);
+  const peso = parseFloat(document.getElementById("peso").value);
+  const resultado = document.getElementById("resultado");
 
+  if (!nome || isNaN(altura) || isNaN(peso) || altura <= 0 || peso <= 0) {
+      resultado.textContent = "Preencha todos os campos corretamente!";
+      return;
+   }
 
-  if(nome !== '' && altura !== '' && peso !== '') {
-    const valorIMC = (peso / (altura * altura)).toFixed(2);
-    
-    let classificacao = '';
-    
-    if(valorIMC < 18.5) {
-      classificacao = 'abaixo do peso.';
-    } else if(valorIMC < 25) {
-      classificacao = 'com peso ideal.';
-    } else if(valorIMC < 30) {
-      classificacao = 'acima do peso ideal.';
-    } else if(valorIMC < 35) {
-      classificacao = 'com obesidade grau I, procure uma atividade física de sua preferência';
-    } else if(valorIMC < 40) {
-      classificacao = 'com obesidade grau II, procure um médico especialista.';
-    } else {
-      classificacao = 'com obesidade grau III, procure urgente um médico especialista.';
-    }
+  const valorIMC = calcularValorIMC(peso, altura);
+  const classificacao = obterClassificacaoIMC(valorIMC);
 
-    resultado.textContent = `${nome}, seu IMC é ${valorIMC} e você está ${classificacao} `;
-  } else {
-    resultado.textContent = 'Preencha todos os campos corretamente!';
-
-  }
-  
+  resultado.textContent = `${nome}, seu IMC é ${valorIMC} e você está ${classificacao}`;
 }
 
-calcular.addEventListener('click', imc);
+function calcularValorIMC(peso, altura) {
+  return (peso / (altura * altura)).toFixed(2);
+}
 
+function obterClassificacaoIMC(imc) {
+  if (imc < 18.5) return "abaixo do peso.";
+  if (imc < 25) return "com peso ideal.";
+  if (imc < 30) return "acima do peso ideal.";
+  if (imc < 35) return "com obesidade grau I, procure uma atividade física de sua preferência.";
+  if (imc < 40) return "com obesidade grau II, procure um médico especialista.";
+  return "com obesidade grau III, procure urgentemente um médico especialista.";
+}
